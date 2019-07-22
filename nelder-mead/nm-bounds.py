@@ -38,13 +38,14 @@ x1_path = [x0]
 def update_path(x, res=None):
     x1_path.append(np.copy(x))
 
-res = sp.optimize.minimize(f, x0, method='Nelder-Mead', callback=update_path)
-x1 = res.x
-x1_path = np.array(x1_path)
-ax.plot(x1_path[:, 0], x1_path[:, 1], 'o-')
 
-# Run own version
-opt = pints.OptimisationController(f, x0, method=NelderMead)
+# Run own version with boundaries
+c = 1, 1
+r = 3.06
+ax.add_artist(plt.Circle(c, r, color='green', alpha=0.1))
+b = CircularBoundaries(c, r)
+
+opt = pints.OptimisationController(f, x0, boundaries=b, method=NelderMead)
 opt._optimiser.ax = ax
 x, _ = opt.run()
 
